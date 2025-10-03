@@ -1,7 +1,5 @@
 # POST — Solicitudes HTTP
 
-En la sección anterior vimos cómo **GET** las solicitudes pueden ser utilizadas por aplicaciones web para funcionalidades como búsqueda y acceso a páginas. Sin embargo, siempre que las aplicaciones web necesitan transferir archivos o mover los parámetros del usuario desde la URL, utilizan **POST** solicitudes.
-
 A diferencia de **HTTP GET**, que coloca los parámetros del usuario dentro de la URL, **HTTP POST** coloca los parámetros del usuario dentro del **cuerpo** de la solicitud HTTP. Esto tiene tres beneficios principales:
 
 - **Lack of Logging:** Como las solicitudes POST pueden transferir archivos grandes (por ejemplo, carga de archivos), no sería eficiente para el servidor registrar todos los archivos cargados como parte de la URL solicitada, como sería el caso de un archivo cargado a través de una solicitud GET.
