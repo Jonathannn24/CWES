@@ -72,4 +72,4 @@ Es esencial realizar **pruebas de seguridad** periódicas (OWASP Testing Guide e
 
 ---
 
-*Archivo generado: `Introduccion_Aplicaciones_Web_resumen.md`*  
+
