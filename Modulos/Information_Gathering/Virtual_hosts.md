@@ -3,7 +3,7 @@
 Breve guía en **Markdown** con lo importante, comandos y precauciones para descubrir hosts virtuales (vhosts).
 
 ---
-
+## Importante : poner en el /etc/hosts/ --> la ip y el nombre de dominio
 ## Concepto rápido
 
 * **Virtual Hosts (VHosts)**: configuraciones del servidor web que permiten alojar varios sitios en una sóla IP usando el encabezado `Host` de HTTP.
