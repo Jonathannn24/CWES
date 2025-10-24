@@ -136,3 +136,19 @@ Combinando herramientas como **curl**, **wafw00f** y **Nikto**, se obtiene un pe
 - Verificar siempre la autorización antes del escaneo.  
 - Usar múltiples herramientas para resultados consistentes.  
 - Combinar con otras fases de reconocimiento (DNS, puertos, subdominios).
+
+Rutas típicas (URL – Uniform Resource Locator):
+
+WordPress: /wp-login.php, /wp-admin/, /wp-content/, /wp-json
+
+Drupal: /user/login, /node, /core/, /jsonapi
+
+Joomla: /administrator/, /templates/
+
+Prestashop: /modules/, cookies tipo PrestaShop-...
+
+Magento: cabeceras X-Magento-*, cookie frontend=...
+
+Shopify: scripts/headers con shopify, x-shopify-...
+
+Wix/Squarespace: scripts de wixstatic.com o headers X-Squarespace-...
